@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	<title>Document</title>
+</head>
+
+<body>
+	<div>Задача 5. Додаток містить масив об’єктів (логін, пароль) -- інсуючі логіни і паролі. Користувач вводить логін і
+		пароль, а програма повідомляє чи може користувач бути авторизованим (чи є він одним з масиву). </div>
+</body>
+<div id="app">
+	<label>
+		Логін
+		<input type="text" v-model="login">
+	</label>
+	<label>
+		Пароль
+		<input type="password" v-model="password">
+	</label>
+	<button @click="confirmLogin">Вхід</button>
+</div>
+<script>
+	const { createApp } = Vue
+	const app = createApp({
+		data() {
+			return {
+				login: null,
+				password: null,
+				rules: [
+					{
+						login: 'Semen',
+						password: '123456'
+					},
+					{
+						login: 'Dima',
+						password: 'qwerty'
+					},
+					{
+						login: 'Petro',
+						password: '654321'
+					}
+				]
+			}
+		},
+		methods: {
+			confirmLogin() {
+				for (const user of this.rules) {
+					if (user.login === this.login && user.password === this.password) {
+						return alert('УСПІШНО')
+					}
+				}
+				return alert('Немає такого користувача')
+			}
+		}
+
+	}).mount('#app')
+</script>
+
+</html>

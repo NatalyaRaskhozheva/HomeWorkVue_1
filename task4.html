@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	<title>Document</title>
+</head>
+<style>
+	.sumColor {}
+
+	.green {
+		color: green;
+	}
+
+	.red {
+		color: red;
+	}
+</style>
+
+<body>
+	Задача 4. “Рахунок у банку”
+	Вимоги:
+	1) Спочатку сума дорівнює 0грн. Змінити суму у гривнях можна або зарахуванням на рахунок, або зняттям.
+	2) Сума автоматично переводиться у долари та євро (фіксований курс задається у data).
+	3) можливість зарахувати суму (контролювати, щоб не була від’ємною)
+	4) можливість зняти (щоб не можна зняти більше ніж є на рахунку)
+	5) при виконанні зняття і зарахування коштів вираховувати 3% від суми (відображати кількість відсотків автоматично)
+
+	При зміні суми :
+	- якщо було зняття, то суму відоражати червоним
+	- якщо було зарахування, то суму відображати зеленим
+	Якщо сума валюти менша за 100 то відображати червоним кольором, інакше - зеленим
+	<div id="myApp">
+		<div :class="nameClass">Сума на рахунку - {{sum}}</div>
+		<div>
+
+			Зарахувати на рахунок
+			<input type="number" v-model="add">
+			<button @click="addMoney">Зарахувати</button>
+		</div>
+		<div>
+			Зняти з рахунку
+			<input type="number" v-model="takeAway">
+			<button @click="takeAwayMoney">Зняти</button>
+		</div>
+		<div>{{result}}</div>
+		<div>Комісія {{percent}} </div>
+		<hr>
+		<div :class="dollarClass">Сума у доларах - {{countDollar}}</div>
+		<div :class="euroClass">Сума у євро - {{countEuro}}</div>
+	</div>
+	</div>
+	<script>
+		const { createApp } = Vue
+		const app = createApp({
+			data() {
+				return {
+					sum: 0,
+					add: 0,
+					takeAway: 0,
+					curseDollar: 37.1,
+					curseEuro: 39.4,
+					result: null,
+					percent: null,
+					nameClass: 'sumColor',
+					dollarClass: 'valuteColor',
+					euroClass: 'valuteColor',
+					sumDollar: 0,
+					sumEuro: 0
+				}
+			},
+			computed: {
+				countDollar() {
+					this.sumDollar = (this.sum / this.curseDollar).toFixed(2)
+					if (this.sumDollar > 100) this.dollarClass = 'green'
+					else this.dollarClass = 'red'
+					return this.sumDollar
+				},
+				countEuro() {
+					this.sumEuro = (this.sum / this.curseEuro).toFixed(2)
+					if (this.sumDollar > 100) this.euroClass = 'green'
+					else this.euroClass = 'red'
+					return this.sumEuro
+				}
+			},
+			methods: {
+				addMoney() {
+					if (this.add > 0) {
+						this.percent = this.add * 0.03
+						this.sum = this.sum + this.add - this.percent
+						this.result = `Зараховано ${this.add}`
+						this.add = 0
+						this.nameClass = 'sumColor green'
+					} else this.result = `Некоректне значення`
+				},
+				takeAwayMoney() {
+					this.percent = this.takeAway * 0.03
+					if (this.takeAway + this.percent <= this.sum) {
+						this.sum = this.sum - this.takeAway - this.percent
+						this.result = `Знято ${this.takeAway}`
+						this.takeAway = 0
+						this.nameClass = 'sumColor red'
+					} else this.result = `Недостатньо коштів`
+				},
+				valuteColor() {
+				}
+			}
+		}).mount('#myApp')
+	</script>
+</body>
+
+</html>
